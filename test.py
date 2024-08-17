@@ -1,23 +1,18 @@
-from typing import List, Union, overload
-# hello mypy
-@overload
-def rot13(inp: str) -> str: ...
+from typing import List
 
-@overload
-def rot13(inp: bytes) -> bytes: ...
 
-def rot13(inp: Union[str, bytes]) -> Union[str, bytes]:
-    if isinstance(inp, bytes):
-        result: List[int] = []
-        for byte in inp:
-            if 65 <= byte <= 90:
-                result.append((byte - 65 + 13) % 26 + 65)
-            elif 97 <= byte <= 122:
-                result.append((byte - 97 + 13) % 26 + 97)
-            else:
-                result.append(byte)
-        return bytes(result)
-    else:
-        return rot13(inp.encode("ascii")).decode("ascii")
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        dp: List[int] = [1] + [0] * (amount + max(coins) + 1)
+        for coin in coins:
+            for i in range(amount):
+                dp[i + coin] += dp[i]
+        return dp[amount]
 
-print(rot13("Hello, world!"))
+
+def main() -> None:
+    s = Solution()
+    print(s.change(amount=5, coins=[1, 2, 5]))
+
+if __name__ == "__main__":
+    main()
